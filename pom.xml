@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>eu.pp.mb.test</groupId>
-	<artifactId>springsec</artifactId>
+	<artifactId>springangularsec</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SpringBootDockerSecurity</name>
-	<description>Spring Boot Security Docker Example</description>
+	<name>SpringBootAngularDockerSecurity</name>
+	<description>Spring Boot Angular Security Docker Example</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -37,9 +37,103 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
+<!--		<resources>-->
+<!--			<resource>-->
+<!--				<directory>src/main/angular/dist</directory>-->
+<!--				<targetPath>static</targetPath>-->
+<!--			</resource>-->
+<!--		</resources>-->
 		<plugins>
+<!--			<plugin>-->
+<!--				<groupId>org.codehaus.mojo</groupId>-->
+<!--				<artifactId>exec-maven-plugin</artifactId>-->
+<!--				<version>3.1.0</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>validate</phase>-->
+<!--						<goals>-->
+<!--							<goal>exec</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<executable>ng</executable>-->
+<!--					<workingDirectory>src/main/angular</workingDirectory>-->
+<!--					<arguments>build</arguments>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.12.1</version>
+				<configuration>
+<!--					<nodeVersion>v16.13.1</nodeVersion>-->
+					<nodeVersion>v18.15.0</nodeVersion>
+					<workingDirectory>src/main/angular</workingDirectory>
+<!--					<installDirectory>target/classes/static</installDirectory>-->
+				</configuration>
+<!--				<configuration>-->
+
+<!--					<npmVersion>${frontend-maven-plugin.npmVersion}</npmVersion>-->
+<!--					<nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>-->
+<!--				</configuration>				-->
+				<executions>
+					<execution>
+						<id>install-npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>npm-install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>npm-build</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>run-script build</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm-test</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>run-script test</arguments>
+						</configuration>
+						<phase>test</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>copy-resource-one</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/angular/dist</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
